@@ -1,4 +1,53 @@
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct LoginWebQrData {
+    #[serde(default = "default_string")]
+    pub url: String,
+    #[serde(default = "default_string", rename = "oauthKey")]
+    pub oauth_key: String,
+}
+
+/// 因为API并不规范, 未登录成功返回数字, 登录成功返回字典, 所以进行了二次封装
+#[derive(Debug, Deserialize, Serialize)]
+pub struct LoginWebQrInfo {
+    // -1：密钥错误
+    // -2：密钥超时
+    // -4：未扫描
+    // -5：未确认
+    #[serde(default = "default_i32")]
+    pub error_data: i32,
+    #[serde(default = "default_string")]
+    pub url: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct LoginTvQrData {
+    #[serde(default = "default_string")]
+    pub url: String,
+    #[serde(default = "default_string")]
+    pub auth_code: String,
+}
+
+/// 因为API并不规范, 未登录成功返回数字, 登录成功返回字典, 所以进行了二次封装
+#[derive(Debug, Deserialize, Serialize)]
+pub struct LoginTvQrInfo {
+    // 0：成功
+    // -3：API校验密匙错误
+    // -400：请求错误
+    // 86038：二维码已失效
+    // 86039：二维码尚未确认
+    #[serde(default = "default_i32")]
+    pub error_data: i32,
+    #[serde(default = "default_i32")]
+    pub mid: i32,
+    #[serde(default = "default_string")]
+    pub access_token: String,
+    #[serde(default = "default_string")]
+    pub refresh_token: String,
+    #[serde(default = "default_i32")]
+    pub expires_in: i32,
+}
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Response<T> {
@@ -230,11 +279,154 @@ pub struct Page {
     pub first_frame: String,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct VideoUrl {
+    #[serde(default = "default_string")]
+    pub from: String,
+    #[serde(default = "default_string")]
+    pub result: String,
+    #[serde(default = "default_string")]
+    pub message: String,
+    #[serde(default = "default_i32")]
+    pub quality: i32,
+    #[serde(default = "default_string")]
+    pub format: String,
+    #[serde(default = "default_i32")]
+    pub timelength: i32,
+    #[serde(default = "default_string")]
+    pub accept_format: String,
+    #[serde(default = "default_vec")]
+    pub accept_description: Vec<String>,
+    #[serde(default = "default_vec")]
+    pub accept_quality: Vec<i32>,
+    #[serde(default = "default_i32")]
+    pub video_codecid: i32,
+    #[serde(default = "default_string")]
+    pub seek_param: String,
+    #[serde(default = "default_string")]
+    pub seek_type: String,
+    #[serde(default = "default_vec")]
+    pub durl: Vec<Durl>,
+    #[serde(default = "default_vec")]
+    pub support_formats: Vec<SupportFormat>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Durl {
+    #[serde(default = "default_i32")]
+    pub order: i32,
+
+    #[serde(default = "default_i64")]
+    pub length: i64,
+
+    #[serde(default = "default_i64")]
+    pub size: i64,
+
+    #[serde(default = "default_string")]
+    pub ahead: String,
+
+    #[serde(default = "default_string")]
+    pub vhead: String,
+
+    #[serde(default = "default_string")]
+    pub url: String,
+
+    #[serde(default = "default_vec")]
+    pub backup_url: Vec<String>,
+    // todo : highFormat
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct SupportFormat {
+    #[serde(default = "default_i32")]
+    pub quality: i32,
+    #[serde(default = "default_string")]
+    pub format: String,
+    #[serde(default = "default_string")]
+    pub new_description: String,
+    #[serde(default = "default_string")]
+    pub display_desc: String,
+    #[serde(default = "default_string")]
+    pub superscript: String,
+}
+
+//////////////
+
+// 240P 极速 仅mp4方式支持
+pub const VIDEO_QUALITY_240P: VideoQuality = VideoQuality { code: 6 };
+
+// 360P 流畅
+pub const VIDEO_QUALITY_360P: VideoQuality = VideoQuality { code: 16 };
+
+// 480P 清晰
+pub const VIDEO_QUALITY_480P: VideoQuality = VideoQuality { code: 32 };
+
+// 720P 高清 ;
+// web端默认值 , B站前端需要登录才能选择，但是直接发送请求可以不登录就拿到720P的取流地址
+// 无720P时则为720P60
+pub const VIDEO_QUALITY_720P: VideoQuality = VideoQuality { code: 64 };
+
+// 720P60 高帧率 ; 需要认证登录账号
+pub const VIDEO_QUALITY_720P_60HZ: VideoQuality = VideoQuality { code: 74 };
+
+// 1080P 高清
+// TV端与APP端默认值, 需要认证登录账号
+pub const VIDEO_QUALITY_1080P: VideoQuality = VideoQuality { code: 80 };
+
+// 1080P+ 高码率	大多情况需求认证大会员账号
+pub const VIDEO_QUALITY_1080P_HIGH: VideoQuality = VideoQuality { code: 112 };
+
+// 1080P60 高帧率	大多情况需求认证大会员账号
+pub const VIDEO_QUALITY_1080P_60HZ: VideoQuality = VideoQuality { code: 116 };
+
+// 4K 超清	需要fnver&128=128且fourk=1  大多情况需求认证大会员账号
+pub const VIDEO_QUALITY_4K: VideoQuality = VideoQuality { code: 120 };
+
+// HDR 真彩色	仅支持dash方式
+// 需要fnver&64=64
+// 大多情况需求认证大会员账号
+pub const VIDEO_QUALITY_HDR: VideoQuality = VideoQuality { code: 125 };
+
+// 视频质量
+pub struct VideoQuality {
+    pub code: i32,
+}
+
+impl Serialize for VideoQuality {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_i32(self.code)
+    }
+}
+
+impl<'de> Deserialize<'de> for VideoQuality {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Ok(VideoQuality {
+            code: Deserialize::deserialize(deserializer)?,
+        })
+    }
+}
+
+// fn default_video_quality() -> VideoQuality {
+//     VideoQuality { code: 0 }
+// }
+
+/////////
+
 fn default_string() -> String {
     String::default()
 }
 
 fn default_i32() -> i32 {
+    0
+}
+
+fn default_i64() -> i64 {
     0
 }
 
