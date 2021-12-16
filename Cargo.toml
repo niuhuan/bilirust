@@ -1,0 +1,11 @@
+[package]
+name = "bilirust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+chrono = { version = "0.4.19", features = ["serde"] }
+reqwest = { version = "0.11.7" }
+serde = { version = "1.0.130", features = ["derive"] }
+serde_json = "1.0.70"
+tokio = { version = "1.14.0", features = ["macros"] }
