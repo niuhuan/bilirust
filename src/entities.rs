@@ -47,6 +47,114 @@ pub struct Response<T> {
     pub data: Option<T>,
 }
 
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MyInfo {
+    pub mid: i64,
+    pub name: String,
+    pub sex: String,
+    pub face: String,
+    pub sign: String,
+    pub rank: i64,
+    pub level: i64,
+    pub jointime: i64,
+    pub moral: i64,
+    pub silence: i64,
+    pub email_status: i64,
+    pub tel_status: i64,
+    pub identification: i64,
+    pub vip: Vip,
+    pub pendant: Pendant,
+    pub nameplate: Nameplate,
+    pub official: Official,
+    pub birthday: i64,
+    pub is_tourist: i64,
+    pub is_fake_account: i64,
+    pub pin_prompting: i64,
+    pub is_deleted: i64,
+    pub in_reg_audit: i64,
+    pub is_rip_user: bool,
+    pub profession: Profession,
+    pub face_nft: i64,
+    pub face_nft_new: i64,
+    pub is_senior_member: i64,
+    pub level_exp: LevelExp,
+    pub coins: i64,
+    pub following: i64,
+    pub follower: i64,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Vip {
+    #[serde(rename = "type")]
+    pub vip_type: i64,
+    pub status: i64,
+    pub due_date: i64,
+    pub vip_pay_type: i64,
+    pub theme_type: i64,
+    pub label: VipLabel,
+    pub avatar_subscript: i64,
+    pub nickname_color: String,
+    pub role: i64,
+    pub avatar_subscript_url: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct VipLabel {
+    pub path: String,
+    pub text: String,
+    pub label_theme: String,
+    pub text_color: String,
+    pub bg_style: i64,
+    pub bg_color: String,
+    pub border_color: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Pendant {
+    pub pid: i64,
+    pub name: String,
+    pub image: String,
+    pub expire: i64,
+    pub image_enhance: String,
+    pub image_enhance_frame: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Nameplate {
+    pub nid: i64,
+    pub name: String,
+    pub image: String,
+    pub image_small: String,
+    pub level: String,
+    pub condition: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Official {
+    pub role: i64,
+    pub title: String,
+    pub desc: String,
+    #[serde(rename = "type")]
+    pub official_type: i64,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Profession {
+    pub id: i64,
+    pub name: String,
+    pub show_name: String,
+    pub is_show: i64,
+    pub category_one: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct LevelExp {
+    pub current_level: i64,
+    pub current_min: i64,
+    pub current_exp: i64,
+    pub next_exp: i64,
+}
+
 #[derive(Debug, Deserialize, Serialize)]
 pub struct BvInfo {
     #[serde(default = "default_string")]

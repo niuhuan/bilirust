@@ -30,7 +30,7 @@ mod tests {
     #[tokio::test]
     async fn test_login_qr_info_parse() {
         let client = Client::new();
-        match client.login_qr_info_parse("https://passport.biligame.com/crossDomain?DedeUserID=1&DedeUserID__ckMd5=2&Expires=3&SESSDATA=4&bili_jct=5&gourl=http%3A%2F%2Fwww.bilibili.com".to_string()) {
+        match client.login_qr_info_parse_token("https://passport.biligame.com/crossDomain?DedeUserID=1&DedeUserID__ckMd5=2&Expires=3&SESSDATA=4&bili_jct=5&gourl=http%3A%2F%2Fwww.bilibili.com".to_string()) {
             Ok(info) => {
                 println!("{}", serde_json::to_string(&info).unwrap())
             }
@@ -44,6 +44,20 @@ mod tests {
     async fn test_login_qr_info() {
         let client = Client::new();
         match client.login_qr_info("code".to_string()).await {
+            Ok(info) => {
+                println!("{}", serde_json::to_string(&info).unwrap())
+            }
+            Err(err) => {
+                println!("{}", err)
+            }
+        };
+    }
+
+    #[tokio::test]
+    async fn test_my_info() {
+        let mut client = Client::new();
+        client.login_set_sess_data("sess_data".to_string());
+        match client.my_info().await {
             Ok(info) => {
                 println!("{}", serde_json::to_string(&info).unwrap())
             }

@@ -19,7 +19,7 @@ const LOCAL_ID_TV: &'static str = "0";
 /// 客户端
 pub struct Client {
     agent: reqwest::Client,
-    web_token: Option<WebToken>,
+    sess_data: Option<String>,
 }
 
 /// 客户端
@@ -28,7 +28,7 @@ impl Client {
     pub fn new() -> Self {
         Self {
             agent: reqwest::ClientBuilder::new().build().unwrap(),
-            web_token: None,
+            sess_data: None,
         }
     }
 
@@ -43,17 +43,8 @@ impl Client {
         let request = self
             .agent
             .request(method, format!("{}{}", API_HOST_URL, path).as_str());
-        let request = match &self.web_token {
-            Some(web_token) => request.header(
-                "Cookie",
-                format!(
-                    "SESSDATA={}; bili_jct={}; DedeUserID={}; DedeUserID__ckMd5={};",
-                    web_token.sessdata,
-                    web_token.bili_jct,
-                    web_token.dedeuserid,
-                    web_token.dedeuserid_ckmd5
-                ),
-            ),
+        let request = match &self.sess_data {
+            Some(web_token) => request.header("Cookie", format!("SESSDATA={}", web_token,)),
             None => request,
         };
         let request = match query {
@@ -110,7 +101,7 @@ impl Client {
         }
     }
 
-    /// WEB二维码登录(1) - 申请二维码
+    /// WEB二维码登录 - 申请二维码
     /// 此返回结构略有不同, 所以进行了自定义封装
     /// code为0成功
     pub async fn login_qr(&self) -> Result<LoginQrData> {
@@ -128,7 +119,7 @@ impl Client {
         Ok(serde_json::from_value(data)?)
     }
 
-    /// 获取Web二维码登录信息
+    /// WEB二维码登录 - 获取Web二维码登录信息
     pub async fn login_qr_info(&self, oauth_key: String) -> Result<LoginQrInfo> {
         let json = self
             .request_passport(
@@ -157,7 +148,7 @@ impl Client {
     }
 
     /// 将url转换为token
-    pub fn login_qr_info_parse(&self, url: String) -> Result<WebToken> {
+    pub fn login_qr_info_parse_token(&self, url: String) -> Result<WebToken> {
         let regex = regex::Regex::new("^.+crossDomain\\?DedeUserID=(\\d+)&DedeUserID__ckMd5=([a-z0-9]+)&Expires=(\\d+)&SESSDATA=([^&]+)&bili_jct=([^&]+)&.+$")?;
         let match_url = regex
             .captures(url.as_str())
@@ -174,6 +165,18 @@ impl Client {
             bili_jct: jct.to_string(),
             expires: FromStr::from_str(exp)?,
         })
+    }
+
+    /// 登录 (注入token)
+    pub fn login_set_sess_data(&mut self, sess_data: String) {
+        self.sess_data = Some(sess_data);
+    }
+
+    /// 个人信息, 登录后才能使用
+    pub async fn my_info(&self) -> Result<MyInfo> {
+        Ok(self
+            .request_api(reqwest::Method::GET, "/x/space/myinfo", None, None)
+            .await?)
     }
 
     /// 获取BV信息
