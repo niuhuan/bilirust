@@ -1,7 +1,21 @@
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct LoginWebQrData {
+pub struct WebToken {
+    #[serde(default = "default_i32", rename = "DedeUserID")]
+    pub dedeuserid: i32,
+    #[serde(default = "default_string", rename = "DedeUserID__ckMd5")]
+    pub dedeuserid_ckmd5: String,
+    #[serde(default = "default_string", rename = "SESSDATA")]
+    pub sessdata: String,
+    #[serde(default = "default_string", rename = "bili_jct")]
+    pub bili_jct: String,
+    #[serde(default = "default_i32", rename = "Expires")]
+    pub expires: i32,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct LoginQrData {
     #[serde(default = "default_string")]
     pub url: String,
     #[serde(default = "default_string", rename = "oauthKey")]
@@ -10,7 +24,7 @@ pub struct LoginWebQrData {
 
 /// 因为API并不规范, 未登录成功返回数字, 登录成功返回字典, 所以进行了二次封装
 #[derive(Debug, Deserialize, Serialize)]
-pub struct LoginWebQrInfo {
+pub struct LoginQrInfo {
     // -1：密钥错误
     // -2：密钥超时
     // -4：未扫描
@@ -19,34 +33,6 @@ pub struct LoginWebQrInfo {
     pub error_data: i32,
     #[serde(default = "default_string")]
     pub url: String,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct LoginTvQrData {
-    #[serde(default = "default_string")]
-    pub url: String,
-    #[serde(default = "default_string")]
-    pub auth_code: String,
-}
-
-/// 因为API并不规范, 未登录成功返回数字, 登录成功返回字典, 所以进行了二次封装
-#[derive(Debug, Deserialize, Serialize)]
-pub struct LoginTvQrInfo {
-    // 0：成功
-    // -3：API校验密匙错误
-    // -400：请求错误
-    // 86038：二维码已失效
-    // 86039：二维码尚未确认
-    #[serde(default = "default_i32")]
-    pub error_data: i32,
-    #[serde(default = "default_i32")]
-    pub mid: i32,
-    #[serde(default = "default_string")]
-    pub access_token: String,
-    #[serde(default = "default_string")]
-    pub refresh_token: String,
-    #[serde(default = "default_i32")]
-    pub expires_in: i32,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -412,9 +398,35 @@ impl<'de> Deserialize<'de> for VideoQuality {
     }
 }
 
-// fn default_video_quality() -> VideoQuality {
-//     VideoQuality { code: 0 }
-// }
+/////////
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct TvLoginQrData {
+    #[serde(default = "default_string")]
+    pub url: String,
+    #[serde(default = "default_string")]
+    pub auth_code: String,
+}
+
+/// 因为API并不规范, 未登录成功返回数字, 登录成功返回字典, 所以进行了二次封装
+#[derive(Debug, Deserialize, Serialize)]
+pub struct LoginTvQrInfo {
+    // 0：成功
+    // -3：API校验密匙错误
+    // -400：请求错误
+    // 86038：二维码已失效
+    // 86039：二维码尚未确认
+    #[serde(default = "default_i32")]
+    pub error_data: i32,
+    #[serde(default = "default_i32")]
+    pub mid: i32,
+    #[serde(default = "default_string")]
+    pub access_token: String,
+    #[serde(default = "default_string")]
+    pub refresh_token: String,
+    #[serde(default = "default_i32")]
+    pub expires_in: i32,
+}
 
 /////////
 
