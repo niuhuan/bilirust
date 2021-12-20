@@ -17,6 +17,7 @@ const APP_SEC_TV: &'static str = "59b43e04ad6965f34319062b478f83dd";
 const LOCAL_ID_TV: &'static str = "0";
 
 /// 客户端
+#[derive(Clone)]
 pub struct Client {
     agent: reqwest::Client,
     sess_data: Option<String>,
