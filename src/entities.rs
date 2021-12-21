@@ -1,6 +1,6 @@
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct WebToken {
     #[serde(default = "default_i32", rename = "DedeUserID")]
     pub dedeuserid: i32,
@@ -14,7 +14,7 @@ pub struct WebToken {
     pub expires: i32,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LoginQrData {
     #[serde(default = "default_string")]
     pub url: String,
@@ -23,7 +23,7 @@ pub struct LoginQrData {
 }
 
 /// 因为API并不规范, 未登录成功返回数字, 登录成功返回字典, 所以进行了二次封装
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LoginQrInfo {
     // -1：密钥错误
     // -2：密钥超时
@@ -35,7 +35,7 @@ pub struct LoginQrInfo {
     pub url: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Response<T> {
     #[serde(default = "default_i32")]
     pub code: i32,
@@ -155,7 +155,7 @@ pub struct LevelExp {
     pub next_exp: i64,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct BvInfo {
     #[serde(default = "default_string")]
     pub bvid: String,
@@ -194,7 +194,7 @@ pub struct BvInfo {
     // todo subtitle...
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DescV2 {
     #[serde(default = "default_string")]
     pub raw_text: String,
@@ -210,7 +210,7 @@ pub struct DescV2 {
     pub stat: Stat,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Rights {
     #[serde(default = "default_i32")]
     bp: i32,
@@ -267,7 +267,7 @@ fn default_rights() -> Rights {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Owner {
     #[serde(default = "default_i32", rename = "type")]
     pub mid: i32,
@@ -285,7 +285,7 @@ fn default_owner() -> Owner {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Stat {
     #[serde(default = "default_i32")]
     pub aid: i32,
@@ -333,7 +333,7 @@ fn default_stat() -> Stat {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Dimension {
     #[serde(default = "default_i32")]
     pub width: i32,
@@ -351,7 +351,7 @@ fn default_dimension() -> Dimension {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Page {
     #[serde(default = "default_i32")]
     pub cid: i32,
@@ -373,7 +373,7 @@ pub struct Page {
     pub first_frame: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct VideoUrl {
     #[serde(default = "default_string")]
     pub from: String,
@@ -405,7 +405,7 @@ pub struct VideoUrl {
     pub support_formats: Vec<SupportFormat>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Durl {
     #[serde(default = "default_i32")]
     pub order: i32,
@@ -430,7 +430,7 @@ pub struct Durl {
     // todo : highFormat
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SupportFormat {
     #[serde(default = "default_i32")]
     pub quality: i32,
@@ -482,6 +482,7 @@ pub const VIDEO_QUALITY_4K: VideoQuality = VideoQuality { code: 120 };
 pub const VIDEO_QUALITY_HDR: VideoQuality = VideoQuality { code: 125 };
 
 // 视频质量
+#[derive(Default, Debug, Clone, PartialEq)]
 pub struct VideoQuality {
     pub code: i32,
 }
@@ -508,7 +509,7 @@ impl<'de> Deserialize<'de> for VideoQuality {
 
 /////////
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TvLoginQrData {
     #[serde(default = "default_string")]
     pub url: String,
@@ -517,7 +518,7 @@ pub struct TvLoginQrData {
 }
 
 /// 因为API并不规范, 未登录成功返回数字, 登录成功返回字典, 所以进行了二次封装
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct LoginTvQrInfo {
     // 0：成功
     // -3：API校验密匙错误
