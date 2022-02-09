@@ -36,7 +36,7 @@ async fn main() {
     // 获取视频的信息
     client.bv_info("BV1TS4y1Q7Y9".to_string()).await;
     // 获取视频的下载地址 (1080P以上需要登录) (FNVAL可以使用位或一起使用) (FLV可能会被分段)
-    client.bv_download_url("BV1TS4y1Q7Y9".to_string(), 459566105, VIDEO_QUALITY_720P, FNVAL_MP4).await;
+    client.bv_download_url("BV1TS4y1Q7Y9".to_string(), 459566105, FNVAL_DASH, VIDEO_QUALITY_720P).await;
     // 其他, 仅实现, 暂时没什么用
     // TV扫码登录
     client.tv_login_qr().await;

@@ -403,6 +403,12 @@ pub struct VideoUrl {
     pub durl: Vec<Durl>,
     #[serde(default = "default_vec")]
     pub support_formats: Vec<SupportFormat>,
+    #[serde(default = "default_dash")]
+    pub dash: Dash,
+}
+
+fn default_dash() -> Dash {
+    Dash::default()
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -442,6 +448,88 @@ pub struct SupportFormat {
     pub display_desc: String,
     #[serde(default = "default_string")]
     pub superscript: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Dash {
+    pub duration: i64,
+    #[serde(rename = "minBufferTime")]
+    pub min_buffer_time: f64,
+    #[serde(rename = "min_buffer_time")]
+    pub min_buffer_time2: f64,
+    pub video: Vec<Video>,
+    pub audio: Vec<Audio>,
+    // pub dolby: Value,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Video {
+    pub id: i64,
+    #[serde(rename = "baseUrl")]
+    pub base_url: String,
+    #[serde(rename = "base_url")]
+    pub base_url2: String,
+    #[serde(rename = "backupUrl")]
+    pub backup_url: Vec<String>,
+    #[serde(rename = "backup_url")]
+    pub backup_url2: Vec<String>,
+    pub bandwidth: i64,
+    #[serde(rename = "mimeType")]
+    pub mime_type: String,
+    #[serde(rename = "mime_type")]
+    pub mime_type2: String,
+    pub codecs: String,
+    pub width: i64,
+    pub height: i64,
+    #[serde(rename = "frameRate")]
+    pub frame_rate: String,
+    #[serde(rename = "frame_rate")]
+    pub frame_rate2: String,
+    pub sar: String,
+    #[serde(rename = "startWithSap")]
+    pub start_with_sap: i64,
+    #[serde(rename = "start_with_sap")]
+    pub start_with_sap2: i64,
+    pub segment_base: SegmentBase,
+    pub codecid: i64,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Audio {
+    pub id: i64,
+    #[serde(rename = "baseUrl")]
+    pub base_url: String,
+    #[serde(rename = "base_url")]
+    pub base_url2: String,
+    #[serde(rename = "backupUrl")]
+    pub backup_url: Vec<String>,
+    #[serde(rename = "backup_url")]
+    pub backup_url2: Vec<String>,
+    pub bandwidth: i64,
+    #[serde(rename = "mimeType")]
+    pub mime_type: String,
+    #[serde(rename = "mime_type")]
+    pub mime_type2: String,
+    pub codecs: String,
+    pub width: i64,
+    pub height: i64,
+    #[serde(rename = "frameRate")]
+    pub frame_rate: String,
+    #[serde(rename = "frame_rate")]
+    pub frame_rate2: String,
+    pub sar: String,
+    #[serde(rename = "startWithSap")]
+    pub start_with_sap: i64,
+    #[serde(rename = "start_with_sap")]
+    pub start_with_sap2: i64,
+    pub segment_base: SegmentBase,
+    pub codecid: i64,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SegmentBase {
+    pub initialization: String,
+    pub index_range: String,
 }
 
 //////////////

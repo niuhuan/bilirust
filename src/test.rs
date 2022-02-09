@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use crate::{sign_form, Client, FNVAL_MP4, VIDEO_QUALITY_720P};
+    use crate::{sign_form, Client, FNVAL_DASH, VIDEO_QUALITY_720P};
 
     #[tokio::test]
     async fn test_sign_form() {
@@ -95,13 +95,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_bv_download_url() {
-        let client = Client::new();
+        let mut client = Client::new();
         match client
             .bv_download_url(
-                "BV1TS4y1Q7Y9".to_string(),
-                459566105,
+                "BV1fK4y1t7hj".to_string(),
+                196018899,
+                FNVAL_DASH,
                 VIDEO_QUALITY_720P,
-                FNVAL_MP4,
             )
             .await
         {

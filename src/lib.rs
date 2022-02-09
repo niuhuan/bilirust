@@ -202,8 +202,8 @@ impl Client {
         &self,
         bvid: String,
         cid: i32,
-        video_quality: VideoQuality,
         fnval: i64,
+        video_quality: VideoQuality,
     ) -> Result<VideoUrl> {
         Ok(self
             .request_api(
