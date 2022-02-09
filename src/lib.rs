@@ -203,6 +203,7 @@ impl Client {
         bvid: String,
         cid: i32,
         video_quality: VideoQuality,
+        fnval: i64,
     ) -> Result<VideoUrl> {
         Ok(self
             .request_api(
@@ -212,7 +213,7 @@ impl Client {
                     "bvid": bvid,
                     "cid":cid,
                     "qn":video_quality.code,
-                    "fnval":0,
+                    "fnval":fnval,
                     "fnver":0,
                     "fourk":1,
                 })),

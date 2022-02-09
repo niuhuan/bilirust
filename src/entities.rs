@@ -509,6 +509,18 @@ impl<'de> Deserialize<'de> for VideoQuality {
 
 /////////
 
+pub const FNVAL_FLV: i64 = 0;
+pub const FNVAL_MP4: i64 = 1;
+pub const FNVAL_DASH: i64 = 16;
+pub const FNVAL_DASH_HDR: i64 = 64;
+pub const FNVAL_4K: i64 = 128;
+pub const FNVAL_DASH_DB: i64 = 256;
+pub const FNVAL_DASH_VISION: i64 = 512;
+pub const FNVAL_DASH_8K: i64 = 1024;
+pub const FNVAL_DASH_AV1: i64 = 2048;
+
+/////////
+
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TvLoginQrData {
     #[serde(default = "default_string")]
