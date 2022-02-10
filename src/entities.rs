@@ -465,10 +465,7 @@ pub struct Dash {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Video {
     pub id: i64,
-    #[serde(rename = "baseUrl")]
     pub base_url: String,
-    #[serde(rename = "base_url")]
-    pub base_url2: String,
     #[serde(rename = "backupUrl")]
     pub backup_url: Vec<String>,
     #[serde(rename = "backup_url")]
@@ -497,10 +494,7 @@ pub struct Video {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Audio {
     pub id: i64,
-    #[serde(rename = "baseUrl")]
     pub base_url: String,
-    #[serde(rename = "base_url")]
-    pub base_url2: String,
     #[serde(rename = "backupUrl")]
     pub backup_url: Vec<String>,
     #[serde(rename = "backup_url")]
