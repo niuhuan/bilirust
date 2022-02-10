@@ -438,8 +438,8 @@ pub struct Durl {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SupportFormat {
-    #[serde(default = "default_i32")]
-    pub quality: i32,
+    #[serde(default = "default_i64")]
+    pub quality: i64,
     #[serde(default = "default_string")]
     pub format: String,
     #[serde(default = "default_string")]
