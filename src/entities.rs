@@ -572,7 +572,7 @@ pub const VIDEO_QUALITY_HDR: VideoQuality = VideoQuality { code: 125 };
 // 视频质量
 #[derive(Default, Debug, Clone, PartialEq)]
 pub struct VideoQuality {
-    pub code: i32,
+    pub code: i64,
 }
 
 impl Serialize for VideoQuality {
@@ -580,7 +580,7 @@ impl Serialize for VideoQuality {
     where
         S: Serializer,
     {
-        serializer.serialize_i32(self.code)
+        serializer.serialize_i64(self.code.clone())
     }
 }
 

@@ -95,7 +95,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_bv_download_url() {
-        let mut client = Client::new();
+        let client = Client::new();
         match client
             .bv_download_url(
                 "BV1fK4y1t7hj".to_string(),
