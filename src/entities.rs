@@ -526,6 +526,271 @@ pub struct SegmentBase {
     pub index_range: String,
 }
 
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SsState {
+    // #[serde(rename = "loginInfo")]
+    // // pub login_info: LoginInfo,
+    // #[serde(rename = "isLogin")]
+    // pub is_login: bool,
+    // #[serde(rename = "couponSelected")]
+    // pub coupon_selected: Value,
+    // #[serde(rename = "payGlobal")]
+    // pub pay_global: Value,
+    // pub loaded: bool,
+    // pub ver: Ver,
+    // pub ssr: Ssr,
+    #[serde(rename = "h1Title")]
+    pub h1title: String,
+    #[serde(rename = "mediaInfo")]
+    pub media_info: MediaInfo,
+    // #[serde(rename = "initEpList")]
+    // pub init_ep_list: Vec<Ep>,
+    #[serde(rename = "epList")]
+    pub ep_list: Vec<Ep>,
+    #[serde(rename = "epInfo")]
+    pub ep_info: Ep,
+    // #[serde(rename = "orderSectionIds")]
+    // pub order_section_ids: Vec<Value>,
+    // pub sections: Vec<Value>,
+    // #[serde(rename = "sectionsMap")]
+    // pub sections_map: SectionsMap,
+    #[serde(rename = "ssList")]
+    pub ss_list: Vec<Ss>,
+    // #[serde(rename = "userState")]
+    // pub user_state: UserState,
+    // #[serde(rename = "ssPayMent")]
+    // pub ss_pay_ment: SsPayMent,
+    // #[serde(rename = "epPayMent")]
+    // pub ep_pay_ment: Value,
+    // pub player: Player,
+    // pub sponsor: Sponsor,
+    // #[serde(rename = "ssRecom")]
+    // pub ss_recom: SsRecom,
+    #[serde(rename = "showBv")]
+    pub show_bv: bool,
+    // pub interact: Interact,
+    // #[serde(rename = "nextEp")]
+    // pub next_ep: Value,
+    // #[serde(rename = "playerEpList")]
+    // pub player_ep_list: PlayerEpList,
+    #[serde(rename = "isOriginal")]
+    pub is_original: bool,
+    #[serde(rename = "premiereCountDown")]
+    pub premiere_count_down: String,
+    // #[serde(rename = "premiereStatus")]
+    // pub premiere_status: PremiereStatus,
+    // #[serde(rename = "premiereEp")]
+    // pub premiere_ep: PremiereEp,
+    // #[serde(rename = "likeMap")]
+    // pub like_map: LikeMap,
+    // #[serde(rename = "uperMap")]
+    // pub uper_map: UperMap,
+    #[serde(rename = "hasPlayableEp")]
+    pub has_playable_ep: bool,
+    // #[serde(rename = "webPlayer")]
+    // pub web_player: WebPlayer,
+    // #[serde(rename = "epMap")]
+    // pub ep_map: Map<String, Ep>,
+    #[serde(rename = "viewAngle")]
+    pub view_angle: String,
+    #[serde(rename = "angleAnimationShow")]
+    pub angle_animation_show: bool,
+    #[serde(rename = "lastVideoTime")]
+    pub last_video_time: i64,
+    #[serde(rename = "videoStatus")]
+    pub video_status: String,
+    #[serde(rename = "insertScripts")]
+    pub insert_scripts: Vec<String>,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Area {
+    pub id: i64,
+    pub name: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Publish {
+    pub is_finish: i64,
+    pub is_started: i64,
+    pub pub_time: String,
+    pub pub_time_show: String,
+    pub unknow_pub_date: i64,
+    pub weekday: i64,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Rating {
+    pub score: i64,
+    pub count: i64,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct UpInfo {
+    pub mid: i64,
+    pub avatar: String,
+    pub name: String,
+    #[serde(rename = "isAnnualVip")]
+    pub is_annual_vip: bool,
+    #[serde(rename = "pendantId")]
+    pub pendant_id: i64,
+    #[serde(rename = "pendantName")]
+    pub pendant_name: String,
+    #[serde(rename = "pendantImage")]
+    pub pendant_image: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MediaInfo {
+    // pub activity: Activity,
+    pub alias: String,
+    pub areas: Vec<Area>,
+    pub bkg_cover: String,
+    pub cover: String,
+    pub episodes: Vec<Ep>,
+    pub evaluate: String,
+    // pub freya: Freya,
+    pub jp_title: String,
+    pub link: String,
+    pub media_id: i64,
+    pub mode: i64,
+    // pub new_ep: NewEp,
+    // pub payment: Payment,
+    // pub positive: Positive,
+    pub publish: Publish,
+    pub rating: Rating,
+    pub record: String,
+    // pub rights: Rights2,
+    pub season_id: i64,
+    pub season_title: String,
+    // pub seasons: Vec<Ss>,
+    pub series: String,
+    pub share_copy: String,
+    pub share_sub_title: String,
+    pub share_url: String,
+    // pub show: Show,
+    pub square_cover: String,
+    // pub stat: Stat2,
+    pub status: i64,
+    pub subtitle: String,
+    pub title: String,
+    pub total: i64,
+    #[serde(rename = "type")]
+    pub type_field: i64,
+    // pub user_status: UserStatus,
+    pub id: i64,
+    #[serde(rename = "ssId")]
+    pub ss_id: i64,
+    #[serde(rename = "jpTitle")]
+    pub jp_title2: String,
+    #[serde(rename = "ssType")]
+    pub ss_type: i64,
+    // #[serde(rename = "ssTypeFormat")]
+    // pub ss_type_format: SsTypeFormat,
+    #[serde(rename = "multiMode")]
+    pub multi_mode: bool,
+    #[serde(rename = "forceWide")]
+    pub force_wide: bool,
+    #[serde(rename = "specialCover")]
+    pub special_cover: String,
+    #[serde(rename = "squareCover")]
+    pub square_cover2: String,
+    #[serde(rename = "playerRecord")]
+    pub player_record: String,
+    // #[serde(rename = "pub")]
+    // pub pub_field: Pub,
+    #[serde(rename = "upInfo")]
+    pub up_info: UpInfo,
+    // #[serde(rename = "newestEp")]
+    // pub newest_ep: NewestEp,
+    // #[serde(rename = "payMent")]
+    // pub pay_ment: PayMent,
+    // #[serde(rename = "payPack")]
+    // pub pay_pack: PayPack,
+    pub count: Count,
+    #[serde(rename = "pgcType")]
+    pub pgc_type: String,
+    #[serde(rename = "epSpMode")]
+    pub ep_sp_mode: bool,
+    #[serde(rename = "newEpSpMode")]
+    pub new_ep_sp_mode: bool,
+    #[serde(rename = "mainSecTitle")]
+    pub main_sec_title: String,
+    // #[serde(rename = "premiereInfo")]
+    // pub premiere_info: PremiereInfo,
+    #[serde(rename = "sectionBottomDesc")]
+    pub section_bottom_desc: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Count {
+    pub coins: i64,
+    pub danmus: i64,
+    pub follows: i64,
+    pub views: i64,
+    pub likes: i64,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Ep {
+    pub aid: i64,
+    pub badge: String,
+    // pub badge_info: BadgeInfo,
+    #[serde(default = "default_i64")]
+    pub badge_type: i64,
+    pub bvid: String,
+    pub cid: i64,
+    pub cover: String,
+    // pub dimension: Dimension3,
+    pub duration: i64,
+    pub from: String,
+    pub id: i64,
+    pub is_view_hide: bool,
+    pub link: String,
+    pub long_title: String,
+    pub pub_time: i64,
+    pub pv: i64,
+    pub release_date: String,
+    // pub rights: Rights4,
+    pub share_copy: String,
+    pub share_url: String,
+    pub short_link: String,
+    pub status: i64,
+    pub subtitle: String,
+    pub title: String,
+    pub vid: String,
+    // pub skip: Skip2,
+    // pub stat: Stat4,
+    // #[serde(rename = "orderSectionIds")]
+    // pub order_section_ids: Vec<Value>,
+    // #[serde(rename = "hasNext")]
+    // pub has_next: bool,
+    // #[serde(rename = "hasSkip")]
+    // pub has_skip: bool,
+    // i: i64,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Ss {
+    pub id: i64,
+    pub title: String,
+    #[serde(rename = "type")]
+    pub type_field: i64,
+    #[serde(rename = "pgcType")]
+    pub pgc_type: String,
+    pub cover: String,
+    #[serde(rename = "epCover")]
+    pub ep_cover: String,
+    pub desc: String,
+    pub badge: String,
+    #[serde(rename = "badgeType")]
+    pub badge_type: i64,
+    #[serde(rename = "badgeColor")]
+    pub badge_color: String,
+    pub views: i64,
+    pub follows: i64,
+}
+
 //////////////
 
 // 240P 极速 仅mp4方式支持

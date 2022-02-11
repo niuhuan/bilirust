@@ -1,13 +1,14 @@
-pub mod entities;
-pub mod test;
-pub mod types;
-pub mod utils;
+use std::str::FromStr;
 
 use chrono::Timelike;
+
 pub use entities::*;
-use std::str::FromStr;
 pub use types::*;
 pub use utils::*;
+
+pub mod entities;
+pub mod types;
+pub mod utils;
 
 const API_HOST_URL: &'static str = "https://api.bilibili.com";
 const PASSPORT_HOST_URL: &'static str = "https://passport.bilibili.com";
@@ -282,4 +283,32 @@ impl Client {
             Ok(serde_json::from_value(value)?)
         }
     }
+
+    /// 获取视频信息
+    /// id: 例如 ep1234 ss1234
+    pub async fn videos_info(&self, id: String) -> Result<SsState> {
+        let rsp = self
+            .agent
+            .get(format!("https://www.bilibili.com/bangumi/play/{}", id))
+            .send()
+            .await?
+            .error_for_status()?
+            .text()
+            .await?;
+        let rsp: &str = match rsp.find("window.__INITIAL_STATE__=") {
+            None => return Err(Box::new(Error::from("not found (1)"))),
+            Some(index) => {
+                let rsp = &rsp[(index + "window.__INITIAL_STATE__=".len())..];
+                match rsp.find(";(function()") {
+                    None => return Err(Box::new(Error::from("not found (2)"))),
+                    Some(index) => &rsp[..index],
+                }
+            }
+        };
+        let jd = &mut serde_json::Deserializer::from_str(rsp);
+        Ok(serde_path_to_error::deserialize(jd)?)
+    }
 }
+
+#[cfg(test)]
+pub mod test;
