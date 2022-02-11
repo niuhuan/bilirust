@@ -202,7 +202,7 @@ impl Client {
     pub async fn bv_download_url(
         &self,
         bvid: String,
-        cid: i32,
+        cid: i64,
         fnval: i64,
         video_quality: VideoQuality,
     ) -> Result<VideoUrl> {
