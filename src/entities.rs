@@ -769,6 +769,9 @@ pub struct Ep {
     // pub has_skip: bool,
     #[serde(default = "default_i64")]
     pub i: i64,
+
+    #[serde(rename = "titleFormat", default = "default_string")]
+    pub title_format: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
