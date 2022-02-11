@@ -184,7 +184,7 @@ pub struct BvInfo {
     #[serde(default = "default_string")]
     pub dynamic: String,
     #[serde(default = "default_i32")]
-    pub cid: i32,
+    pub cid: i64,
     #[serde(default = "default_dimension")]
     pub dimension: Dimension,
     #[serde(default = "default_bool")]
@@ -354,7 +354,7 @@ fn default_dimension() -> Dimension {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Page {
     #[serde(default = "default_i32")]
-    pub cid: i32,
+    pub cid: i64,
     #[serde(default = "default_i32")]
     pub page: i32,
     #[serde(default = "default_string")]
@@ -394,7 +394,7 @@ pub struct VideoUrl {
     #[serde(default = "default_vec")]
     pub accept_quality: Vec<i32>,
     #[serde(default = "default_i32")]
-    pub video_codecid: i32,
+    pub video_codecid: i64,
     #[serde(default = "default_string")]
     pub seek_param: String,
     #[serde(default = "default_string")]
