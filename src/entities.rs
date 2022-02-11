@@ -621,7 +621,7 @@ pub struct Publish {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Rating {
-    pub score: i64,
+    pub score: f64,
     pub count: i64,
 }
 

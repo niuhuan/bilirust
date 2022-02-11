@@ -141,7 +141,7 @@ async fn test_tv_login_qr_info() {
 #[tokio::test]
 async fn test_videos_info() {
     let client = Client::new();
-    match client.videos_info("ss25617".to_string()).await {
+    match client.videos_info("ss5793".to_string()).await {
         Ok(info) => {
             println!("{}", serde_json::to_string(&info).unwrap())
         }
