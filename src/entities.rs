@@ -767,7 +767,8 @@ pub struct Ep {
     // pub has_next: bool,
     // #[serde(rename = "hasSkip")]
     // pub has_skip: bool,
-    // i: i64,
+    #[serde(default = "default_i64")]
+    pub i: i64,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
