@@ -1,7 +1,6 @@
 use std::str::FromStr;
 
 use chrono::Timelike;
-
 pub use entities::*;
 pub use types::*;
 pub use utils::*;
@@ -61,7 +60,7 @@ impl Client {
         match resp {
             Ok(resp) => {
                 let body = resp.text().await?;
-                let json: serde_json::Value = serde_json::from_str(body.as_str())?;
+                let json: serde_json::Value = from_str(&body)?;
                 let response: Response<T> = serde_json::from_value(json)?;
                 match &(response.code) {
                     0 => Ok(response.data.ok_or(Error::from("response empty"))?),
@@ -96,7 +95,7 @@ impl Client {
         match resp {
             Ok(resp) => {
                 let body = resp.text().await?;
-                let json: serde_json::Value = serde_json::from_str(body.as_str())?;
+                let json: serde_json::Value = from_str(body.as_str())?;
                 Ok(json)
             }
             Err(err) => Err(Box::new(Error::from(err.to_string()))),
@@ -305,8 +304,8 @@ impl Client {
                 }
             }
         };
-        let jd = &mut serde_json::Deserializer::from_str(rsp);
-        Ok(serde_path_to_error::deserialize(jd)?)
+        // println!("=====\n{}\n======", rsp);
+        Ok(from_str(rsp)?)
     }
 }
 

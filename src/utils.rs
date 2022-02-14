@@ -1,5 +1,15 @@
-use crate::types::*;
 use crypto::digest::Digest;
+
+use crate::types::*;
+
+//////////////////// JSON ////////////////////
+
+/// FROM STRING 并打印出错的位置
+pub fn from_str<T: for<'de> serde::Deserialize<'de>>(json: &str) -> Result<T> {
+    Ok(serde_path_to_error::deserialize(
+        &mut serde_json::Deserializer::from_str(json),
+    )?)
+}
 
 //////////////////// AV->BV ////////////////////
 
