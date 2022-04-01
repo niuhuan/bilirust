@@ -2,11 +2,10 @@ use std::str::FromStr;
 
 use chrono::Timelike;
 pub use entities::*;
-pub use types::*;
+pub use anyhow::{Error, Result};
 pub use utils::*;
 
 pub mod entities;
-pub mod types;
 pub mod utils;
 
 const API_HOST_URL: &'static str = "https://api.bilibili.com";
@@ -45,7 +44,7 @@ impl Client {
             .agent
             .request(method, format!("{}{}", API_HOST_URL, path).as_str());
         let request = match &self.sess_data {
-            Some(web_token) => request.header("Cookie", format!("SESSDATA={}", web_token,)),
+            Some(web_token) => request.header("Cookie", format!("SESSDATA={}", web_token, )),
             None => request,
         };
         let request = match query {
@@ -56,18 +55,13 @@ impl Client {
             None => request.send(),
             Some(body) => request.body(serde_json::to_string(&body)?).send(),
         };
-        let resp = resp.await;
-        match resp {
-            Ok(resp) => {
-                let body = resp.text().await?;
-                let json: serde_json::Value = from_str(&body)?;
-                let response: Response<T> = serde_json::from_value(json)?;
-                match &(response.code) {
-                    0 => Ok(response.data.ok_or(Error::from("response empty"))?),
-                    _ => Err(Box::new(Error::from(response.message))),
-                }
-            }
-            Err(err) => Err(Box::new(Error::from(err.to_string()))),
+        let resp = resp.await?;
+        let body = resp.text().await?;
+        let json: serde_json::Value = from_str(&body)?;
+        let response: Response<T> = serde_json::from_value(json)?;
+        match &(response.code) {
+            0 => Ok(response.data.ok_or(Error::msg("response empty"))?),
+            _ => Err(anyhow::Error::msg(response.message)),
         }
     }
 
@@ -91,15 +85,10 @@ impl Client {
             None => request.send(),
             Some(body) => request.form(&body).send(),
         };
-        let resp = resp.await;
-        match resp {
-            Ok(resp) => {
-                let body = resp.text().await?;
-                let json: serde_json::Value = from_str(body.as_str())?;
-                Ok(json)
-            }
-            Err(err) => Err(Box::new(Error::from(err.to_string()))),
-        }
+        let resp = resp.await?;
+        let body = resp.text().await?;
+        let json: serde_json::Value = from_str(body.as_str())?;
+        Ok(json)
     }
 
     /// WEB二维码登录 - 申请二维码
@@ -111,10 +100,10 @@ impl Client {
             .await?;
         let code = &json["code"];
         if !code.is_i64() {
-            return Err(Box::new(Error::from("err code format")));
+            return Err(Error::msg("err code format"));
         }
         if code.as_i64().unwrap() != 0 {
-            return Err(Box::new(Error::from("error")));
+            return Err(Error::msg("error"));
         }
         let data = json["data"].clone();
         Ok(serde_json::from_value(data)?)
@@ -133,7 +122,7 @@ impl Client {
         let value = json["data"].clone();
         if value.is_i64() {
             Ok(LoginQrInfo {
-                error_data: value.as_i64().ok_or(Error::from("error format"))? as i32,
+                error_data: value.as_i64().ok_or(Error::msg("error format"))? as i32,
                 url: String::default(),
             })
         } else {
@@ -141,7 +130,7 @@ impl Client {
                 error_data: 0,
                 url: value["url"]
                     .as_str()
-                    .ok_or(Error::from("error format"))?
+                    .ok_or(Error::msg("error format"))?
                     .to_string(),
             };
             Ok(info)
@@ -153,12 +142,12 @@ impl Client {
         let regex = regex::Regex::new("^.+crossDomain\\?DedeUserID=(\\d+)&DedeUserID__ckMd5=([a-z0-9]+)&Expires=(\\d+)&SESSDATA=([^&]+)&bili_jct=([^&]+)&.+$")?;
         let match_url = regex
             .captures(url.as_str())
-            .ok_or(Error::from("not match"))?;
-        let uid = match_url.get(1).ok_or(Error::from("not match 1"))?.as_str();
-        let md5 = match_url.get(2).ok_or(Error::from("not match 2"))?.as_str();
-        let exp = match_url.get(3).ok_or(Error::from("not match 3"))?.as_str();
-        let sess = match_url.get(4).ok_or(Error::from("not match 4"))?.as_str();
-        let jct = match_url.get(5).ok_or(Error::from("not match 5"))?.as_str();
+            .ok_or(Error::msg("not match"))?;
+        let uid = match_url.get(1).ok_or(Error::msg("not match 1"))?.as_str();
+        let md5 = match_url.get(2).ok_or(Error::msg("not match 2"))?.as_str();
+        let exp = match_url.get(3).ok_or(Error::msg("not match 3"))?.as_str();
+        let sess = match_url.get(4).ok_or(Error::msg("not match 4"))?.as_str();
+        let jct = match_url.get(5).ok_or(Error::msg("not match 5"))?.as_str();
         Ok(WebToken {
             dedeuserid: FromStr::from_str(uid)?,
             dedeuserid_ckmd5: md5.to_string(),
@@ -241,11 +230,11 @@ impl Client {
             .await?;
         let code = &json["code"];
         if !code.is_i64() {
-            return Err(Box::new(Error::from("err code format")));
+            return Err(Error::msg("err code format"));
         }
         if code.as_i64().unwrap() != 0 {
             // todo
-            return Err(Box::new(Error::from("error")));
+            return Err(Error::msg("error"));
         }
         let data = json["data"].clone();
         Ok(serde_json::from_value(data)?)
@@ -272,7 +261,7 @@ impl Client {
         let value = json["data"].clone();
         if value.is_null() {
             Ok(LoginTvQrInfo {
-                error_data: json["code"].as_i64().ok_or(Error::from("error format"))? as i32,
+                error_data: json["code"].as_i64().ok_or(Error::msg("error format"))? as i32,
                 mid: 0,
                 access_token: "".to_string(),
                 refresh_token: "".to_string(),
@@ -295,11 +284,11 @@ impl Client {
             .text()
             .await?;
         let rsp: &str = match rsp.find("window.__INITIAL_STATE__=") {
-            None => return Err(Box::new(Error::from("not found (1)"))),
+            None => return Err(Error::msg("not found (1)")),
             Some(index) => {
                 let rsp = &rsp[(index + "window.__INITIAL_STATE__=".len())..];
                 match rsp.find(";(function()") {
-                    None => return Err(Box::new(Error::from("not found (2)"))),
+                    None => return Err(Error::msg("not found (2)")),
                     Some(index) => &rsp[..index],
                 }
             }

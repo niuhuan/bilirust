@@ -1,6 +1,6 @@
 use crypto::digest::Digest;
 
-use crate::types::*;
+use crate::{Error, Result};
 
 //////////////////// JSON ////////////////////
 
@@ -38,7 +38,7 @@ pub fn av_to_bv(avid: i64) -> String {
 pub fn sign_form(params: serde_json::Value, app_sec: &str) -> Result<serde_json::Value> {
     // 获取签名参数的对象
     if !params.is_object() {
-        return Err(Box::new(Error::from("sign error: not object")));
+        return Err(Error::msg("sign error: not object"));
     }
     let obj = params.as_object().unwrap();
     // 获取Keys并排序
