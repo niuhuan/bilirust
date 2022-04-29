@@ -1,8 +1,8 @@
 use std::str::FromStr;
 
+pub use anyhow::{Error, Result};
 use chrono::Timelike;
 pub use entities::*;
-pub use anyhow::{Error, Result};
 pub use utils::*;
 
 pub mod entities;
@@ -44,7 +44,7 @@ impl Client {
             .agent
             .request(method, format!("{}{}", API_HOST_URL, path).as_str());
         let request = match &self.sess_data {
-            Some(web_token) => request.header("Cookie", format!("SESSDATA={}", web_token, )),
+            Some(web_token) => request.header("Cookie", format!("SESSDATA={}", web_token,)),
             None => request,
         };
         let request = match query {
@@ -57,8 +57,7 @@ impl Client {
         };
         let resp = resp.await?;
         let body = resp.text().await?;
-        let json: serde_json::Value = from_str(&body)?;
-        let response: Response<T> = serde_json::from_value(json)?;
+        let response: Response<T> = from_str(&body)?;
         match &(response.code) {
             0 => Ok(response.data.ok_or(Error::msg("response empty"))?),
             _ => Err(anyhow::Error::msg(response.message)),
@@ -293,7 +292,6 @@ impl Client {
                 }
             }
         };
-        // println!("=====\n{}\n======", rsp);
         Ok(from_str(rsp)?)
     }
 }

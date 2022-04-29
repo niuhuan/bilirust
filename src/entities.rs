@@ -175,7 +175,7 @@ pub struct BvInfo {
     pub ctime: i32,
     #[serde(default = "default_string")]
     pub desc: String,
-    #[serde(default = "default_vec")]
+    #[serde(default = "default_vec", deserialize_with = "null_vec")]
     pub desc_v2: Vec<DescV2>,
     #[serde(default = "default_i32")]
     pub state: i32,
@@ -189,7 +189,7 @@ pub struct BvInfo {
     pub dimension: Dimension,
     #[serde(default = "default_bool")]
     pub no_cache: bool,
-    #[serde(default = "default_vec")]
+    #[serde(default = "default_vec", deserialize_with = "null_vec")]
     pub pages: Vec<Page>,
     // todo subtitle...
 }
@@ -389,9 +389,9 @@ pub struct VideoUrl {
     pub timelength: i32,
     #[serde(default = "default_string")]
     pub accept_format: String,
-    #[serde(default = "default_vec")]
+    #[serde(default = "default_vec", deserialize_with = "null_vec")]
     pub accept_description: Vec<String>,
-    #[serde(default = "default_vec")]
+    #[serde(default = "default_vec", deserialize_with = "null_vec")]
     pub accept_quality: Vec<i32>,
     #[serde(default = "default_i32")]
     pub video_codecid: i32,
@@ -399,9 +399,9 @@ pub struct VideoUrl {
     pub seek_param: String,
     #[serde(default = "default_string")]
     pub seek_type: String,
-    #[serde(default = "default_vec")]
+    #[serde(default = "default_vec", deserialize_with = "null_vec")]
     pub durl: Vec<Durl>,
-    #[serde(default = "default_vec")]
+    #[serde(default = "default_vec", deserialize_with = "null_vec")]
     pub support_formats: Vec<SupportFormat>,
     #[serde(default = "default_dash")]
     pub dash: Dash,
@@ -431,7 +431,7 @@ pub struct Durl {
     #[serde(default = "default_string")]
     pub url: String,
 
-    #[serde(default = "default_vec")]
+    #[serde(default = "default_vec", deserialize_with = "null_vec")]
     pub backup_url: Vec<String>,
     // todo : highFormat
 }
@@ -466,9 +466,17 @@ pub struct Dash {
 pub struct Video {
     pub id: i64,
     pub base_url: String,
-    #[serde(rename = "backupUrl")]
+    #[serde(
+        rename = "backupUrl",
+        default = "default_vec",
+        deserialize_with = "null_vec"
+    )]
     pub backup_url: Vec<String>,
-    #[serde(rename = "backup_url")]
+    #[serde(
+        rename = "backup_url",
+        default = "default_vec",
+        deserialize_with = "null_vec"
+    )]
     pub backup_url2: Vec<String>,
     pub bandwidth: i64,
     #[serde(rename = "mimeType")]
@@ -495,9 +503,17 @@ pub struct Video {
 pub struct Audio {
     pub id: i64,
     pub base_url: String,
-    #[serde(rename = "backupUrl")]
+    #[serde(
+        rename = "backupUrl",
+        default = "default_vec",
+        deserialize_with = "null_vec"
+    )]
     pub backup_url: Vec<String>,
-    #[serde(rename = "backup_url")]
+    #[serde(
+        rename = "backup_url",
+        default = "default_vec",
+        deserialize_with = "null_vec"
+    )]
     pub backup_url2: Vec<String>,
     pub bandwidth: i64,
     #[serde(rename = "mimeType")]
@@ -924,4 +940,27 @@ fn default_option<T>() -> Option<T> {
 
 fn default_vec<T>() -> Vec<T> {
     vec![]
+}
+
+fn null_vec<'de, D, T: for<'d> serde::Deserialize<'d>>(
+    d: D,
+) -> std::result::Result<Vec<T>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let value: serde_json::Value = serde::Deserialize::deserialize(d)?;
+    if value.is_null() {
+        Ok(vec![])
+    } else if value.is_array() {
+        let mut vec: Vec<T> = vec![];
+        for x in value.as_array().unwrap() {
+            vec.push(match serde_json::from_value(x.clone()) {
+                Ok(t) => t,
+                Err(err) => return Err(serde::de::Error::custom(err.to_string())),
+            });
+        }
+        Ok(vec)
+    } else {
+        Err(serde::de::Error::custom("type error"))
+    }
 }
