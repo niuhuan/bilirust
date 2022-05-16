@@ -274,9 +274,14 @@ impl Client {
     /// 获取视频信息
     /// id: 例如 ep1234 ss1234
     pub async fn videos_info(&self, id: String) -> Result<SsState> {
+        self.videos_info_by_url(format!("https://www.bilibili.com/bangumi/play/{}", id))
+            .await
+    }
+
+    pub async fn videos_info_by_url(&self, url: String) -> Result<SsState> {
         let rsp = self
             .agent
-            .get(format!("https://www.bilibili.com/bangumi/play/{}", id))
+            .get(url)
             .send()
             .await?
             .error_for_status()?
