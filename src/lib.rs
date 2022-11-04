@@ -27,7 +27,9 @@ impl Client {
     /// 构造方法
     pub fn new() -> Self {
         Self {
-            agent: reqwest::ClientBuilder::new().build().unwrap(),
+            agent: reqwest::ClientBuilder::new()
+                .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36")
+                .build().unwrap(),
             sess_data: None,
         }
     }
