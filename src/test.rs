@@ -163,3 +163,19 @@ async fn test_user_info() {
         }
     };
 }
+
+#[tokio::test]
+async fn test_collection_video_page() {
+    let client = Client::new();
+    match client
+        .collection_video_page(504934876, 662139, false, 1, 30)
+        .await
+    {
+        Ok(info) => {
+            println!("{}", serde_json::to_string(&info).unwrap())
+        }
+        Err(err) => {
+            println!("{}", err)
+        }
+    };
+}

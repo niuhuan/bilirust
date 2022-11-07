@@ -306,12 +306,39 @@ impl Client {
         Ok(self
             .request_api(
                 reqwest::Method::GET,
-                "/x/space/acc/info?&token=&=&=jsonp",
+                "/x/space/acc/info",
                 Some(serde_json::json!({
                     "mid": mid,
                     "token":"",
                     "platform":"web",
                     "jsonp":"jsonp",
+                })),
+                None,
+            )
+            .await?)
+    }
+
+    // https://space.bilibili.com/{mid}/channel/collectiondetail?sid={sid}
+    // page_num 1 开始
+    // page_size 请使用30
+    pub async fn collection_video_page(
+        &self,
+        mid: i32,
+        sid: i32,
+        sort_reverse: bool,
+        page_num: i64,
+        page_size: i64,
+    ) -> Result<VideoPage> {
+        Ok(self
+            .request_api(
+                reqwest::Method::GET,
+                "/x/polymer/space/seasons_archives_list",
+                Some(serde_json::json!({
+                    "mid": mid,
+                    "season_id":sid,
+                    "sort_reverse":sort_reverse,
+                    "page_num":page_num,
+                    "page_size":page_size,
                 })),
                 None,
             )

@@ -1076,3 +1076,52 @@ pub struct ProfessionUserInfo {
     pub title: String,
     pub is_show: i64,
 }
+
+/////////////////////
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct VideoPage {
+    pub aids: Vec<i64>,
+    pub archives: Vec<VideoArchive>,
+    pub meta: VideoMeta,
+    pub page: VideoPageInfo,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct VideoArchive {
+    pub aid: i64,
+    pub bvid: String,
+    pub ctime: i64,
+    pub duration: i64,
+    pub interactive_video: bool,
+    pub pic: String,
+    pub pubdate: i64,
+    pub stat: VideoStat,
+    pub state: i64,
+    pub title: String,
+    pub ugc_pay: i64,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct VideoStat {
+    pub view: i64,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct VideoMeta {
+    pub category: i64,
+    pub cover: String,
+    pub description: String,
+    pub mid: i64,
+    pub name: String,
+    pub ptime: i64,
+    pub season_id: i64,
+    pub total: i64,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct VideoPageInfo {
+    pub page_num: i64,
+    pub page_size: i64,
+    pub total: i64,
+}
