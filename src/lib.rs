@@ -301,6 +301,22 @@ impl Client {
         };
         Ok(from_str(rsp)?)
     }
+
+    pub async fn user_info(&self, mid: i32) -> Result<UserInfo> {
+        Ok(self
+            .request_api(
+                reqwest::Method::GET,
+                "/x/space/acc/info?&token=&=&=jsonp",
+                Some(serde_json::json!({
+                    "mid": mid,
+                    "token":"",
+                    "platform":"web",
+                    "jsonp":"jsonp",
+                })),
+                None,
+            )
+            .await?)
+    }
 }
 
 #[cfg(test)]
