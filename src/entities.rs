@@ -1080,15 +1080,15 @@ pub struct ProfessionUserInfo {
 /////////////////////
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct VideoPage {
+pub struct CollectionDetailPage {
     pub aids: Vec<i64>,
-    pub archives: Vec<VideoArchive>,
-    pub meta: VideoMeta,
+    pub archives: Vec<CollectionDetailArchive>,
+    pub meta: CollectionDetailMeta,
     pub page: VideoPageInfo,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct VideoArchive {
+pub struct CollectionDetailArchive {
     pub aid: i64,
     pub bvid: String,
     pub ctime: i64,
@@ -1096,19 +1096,19 @@ pub struct VideoArchive {
     pub interactive_video: bool,
     pub pic: String,
     pub pubdate: i64,
-    pub stat: VideoStat,
+    pub stat: CollectionDetailStat,
     pub state: i64,
     pub title: String,
     pub ugc_pay: i64,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct VideoStat {
+pub struct CollectionDetailStat {
     pub view: i64,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct VideoMeta {
+pub struct CollectionDetailMeta {
     pub category: i64,
     pub cover: String,
     pub description: String,

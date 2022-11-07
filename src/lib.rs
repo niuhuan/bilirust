@@ -328,7 +328,7 @@ impl Client {
         sort_reverse: bool,
         page_num: i64,
         page_size: i64,
-    ) -> Result<VideoPage> {
+    ) -> Result<CollectionDetailPage> {
         Ok(self
             .request_api(
                 reqwest::Method::GET,
