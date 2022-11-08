@@ -78,7 +78,7 @@ pub struct MyInfo {
     pub face_nft_new: i64,
     pub is_senior_member: i64,
     pub level_exp: LevelExp,
-    pub coins: i64,
+    pub coins: f64,
     pub following: i64,
     pub follower: i64,
 }

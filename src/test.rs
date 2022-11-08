@@ -164,6 +164,13 @@ async fn test_user_info() {
     };
 }
 
+#[test]
+fn test_parse_user_info() {
+    let json = r###""###;
+    let info: crate::Response<crate::MyInfo> = serde_json::from_str(json).unwrap();
+    println!("{:?}", info);
+}
+
 #[tokio::test]
 async fn test_collection_video_page() {
     let client = Client::new();
