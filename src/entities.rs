@@ -982,7 +982,7 @@ pub struct UserInfo {
     pub jointime: i64,
     pub moral: i64,
     pub silence: i64,
-    pub coins: i64,
+    pub coins: f64,
     pub fans_badge: bool,
     // pub fans_medal: FansMedal,
     pub official: Official,
