@@ -123,7 +123,7 @@ impl Client {
         let value = json["data"].clone();
         if value.is_i64() {
             Ok(LoginQrInfo {
-                error_data: value.as_i64().ok_or(Error::msg("error format"))? as i32,
+                error_data: value.as_i64().ok_or(Error::msg("error format"))?,
                 url: String::default(),
             })
         } else {
@@ -262,7 +262,7 @@ impl Client {
         let value = json["data"].clone();
         if value.is_null() {
             Ok(LoginTvQrInfo {
-                error_data: json["code"].as_i64().ok_or(Error::msg("error format"))? as i32,
+                error_data: json["code"].as_i64().ok_or(Error::msg("error format"))?,
                 mid: 0,
                 access_token: "".to_string(),
                 refresh_token: "".to_string(),
@@ -302,7 +302,7 @@ impl Client {
         Ok(from_str(rsp)?)
     }
 
-    pub async fn user_info(&self, mid: i32) -> Result<UserInfo> {
+    pub async fn user_info(&self, mid: i64) -> Result<UserInfo> {
         Ok(self
             .request_api(
                 reqwest::Method::GET,
@@ -323,7 +323,7 @@ impl Client {
     // page_size 请使用30
     pub async fn seasons_series_list_data(
         &self,
-        mid: i32,
+        mid: i64,
         page_num: i64,
         page_size: i64,
     ) -> Result<SeasonsSeriesListData> {
@@ -346,7 +346,7 @@ impl Client {
     // page_size 请使用30
     pub async fn seasons_series_list(
         &self,
-        mid: i32,
+        mid: i64,
         page_num: i64,
         page_size: i64,
     ) -> Result<SeasonsSeriesList> {
@@ -361,8 +361,8 @@ impl Client {
     // page_size 请使用30
     pub async fn collection_video_page(
         &self,
-        mid: i32,
-        sid: i32,
+        mid: i64,
+        sid: i64,
         sort_reverse: bool,
         page_num: i64,
         page_size: i64,
@@ -377,6 +377,19 @@ impl Client {
                     "sort_reverse":sort_reverse,
                     "page_num":page_num,
                     "page_size":page_size,
+                })),
+                None,
+            )
+            .await?)
+    }
+
+    pub async fn series_info(&self, series_id: i64) -> Result<SeriesVideoInfoData> {
+        Ok(self
+            .request_api(
+                reqwest::Method::GET,
+                "/x/series/series",
+                Some(serde_json::json!({
+                    "series_id": series_id,
                 })),
                 None,
             )

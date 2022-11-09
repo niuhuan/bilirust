@@ -2,16 +2,16 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct WebToken {
-    #[serde(default = "default_i32", rename = "DedeUserID")]
-    pub dedeuserid: i32,
+    #[serde(default = "default_i64", rename = "DedeUserID")]
+    pub dedeuserid: i64,
     #[serde(default = "default_string", rename = "DedeUserID__ckMd5")]
     pub dedeuserid_ckmd5: String,
     #[serde(default = "default_string", rename = "SESSDATA")]
     pub sessdata: String,
     #[serde(default = "default_string", rename = "bili_jct")]
     pub bili_jct: String,
-    #[serde(default = "default_i32", rename = "Expires")]
-    pub expires: i32,
+    #[serde(default = "default_i64", rename = "Expires")]
+    pub expires: i64,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -29,20 +29,20 @@ pub struct LoginQrInfo {
     // -2：密钥超时
     // -4：未扫描
     // -5：未确认
-    #[serde(default = "default_i32")]
-    pub error_data: i32,
+    #[serde(default = "default_i64")]
+    pub error_data: i64,
     #[serde(default = "default_string")]
     pub url: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Response<T> {
-    #[serde(default = "default_i32")]
-    pub code: i32,
+    #[serde(default = "default_i64")]
+    pub code: i64,
     #[serde(default = "default_string")]
     pub message: String,
-    #[serde(default = "default_i32")]
-    pub ttl: i32,
+    #[serde(default = "default_i64")]
+    pub ttl: i64,
     #[serde(default = "default_option")]
     pub data: Option<T>,
 }
@@ -160,28 +160,28 @@ pub struct LevelExp {
 pub struct BvInfo {
     #[serde(default = "default_string")]
     pub bvid: String,
-    #[serde(default = "default_i32")]
-    pub aid: i32,
-    #[serde(default = "default_i32")]
-    pub videos: i32,
-    #[serde(default = "default_i32")]
-    pub tid: i32,
-    #[serde(default = "default_i32")]
-    pub copyright: i32,
+    #[serde(default = "default_i64")]
+    pub aid: i64,
+    #[serde(default = "default_i64")]
+    pub videos: i64,
+    #[serde(default = "default_i64")]
+    pub tid: i64,
+    #[serde(default = "default_i64")]
+    pub copyright: i64,
     #[serde(default = "default_string")]
     pub pic: String,
     #[serde(default = "default_string")]
     pub title: String,
-    #[serde(default = "default_i32")]
-    pub ctime: i32,
+    #[serde(default = "default_i64")]
+    pub ctime: i64,
     #[serde(default = "default_string")]
     pub desc: String,
     #[serde(default = "default_vec", deserialize_with = "null_vec")]
     pub desc_v2: Vec<DescV2>,
-    #[serde(default = "default_i32")]
-    pub state: i32,
-    #[serde(default = "default_i32")]
-    pub duration: i32,
+    #[serde(default = "default_i64")]
+    pub state: i64,
+    #[serde(default = "default_i64")]
+    pub duration: i64,
     #[serde(default = "default_string")]
     pub dynamic: String,
     #[serde(default = "default_i64")]
@@ -199,10 +199,10 @@ pub struct BvInfo {
 pub struct DescV2 {
     #[serde(default = "default_string")]
     pub raw_text: String,
-    #[serde(default = "default_i32", rename = "type")]
-    pub desc_type: i32,
-    #[serde(default = "default_i32")]
-    pub biz_id: i32,
+    #[serde(default = "default_i64", rename = "type")]
+    pub desc_type: i64,
+    #[serde(default = "default_i64")]
+    pub biz_id: i64,
     #[serde(default = "default_rights")]
     pub rights: Rights,
     #[serde(default = "default_owner")]
@@ -213,38 +213,38 @@ pub struct DescV2 {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Rights {
-    #[serde(default = "default_i32")]
-    bp: i32,
-    #[serde(default = "default_i32")]
-    elec: i32,
-    #[serde(default = "default_i32")]
-    download: i32,
-    #[serde(default = "default_i32")]
-    movie: i32,
-    #[serde(default = "default_i32")]
-    pay: i32,
-    #[serde(default = "default_i32")]
-    hd5: i32,
-    #[serde(default = "default_i32")]
-    no_reprint: i32,
-    #[serde(default = "default_i32")]
-    autoplay: i32,
-    #[serde(default = "default_i32")]
-    ugc_pay: i32,
-    #[serde(default = "default_i32")]
-    is_cooperation: i32,
-    #[serde(default = "default_i32")]
-    ugc_pay_preview: i32,
-    #[serde(default = "default_i32")]
-    no_background: i32,
-    #[serde(default = "default_i32")]
-    clean_mode: i32,
-    #[serde(default = "default_i32")]
-    is_stein_gate: i32,
-    #[serde(default = "default_i32")]
-    is_360: i32,
-    #[serde(default = "default_i32")]
-    no_share: i32,
+    #[serde(default = "default_i64")]
+    bp: i64,
+    #[serde(default = "default_i64")]
+    elec: i64,
+    #[serde(default = "default_i64")]
+    download: i64,
+    #[serde(default = "default_i64")]
+    movie: i64,
+    #[serde(default = "default_i64")]
+    pay: i64,
+    #[serde(default = "default_i64")]
+    hd5: i64,
+    #[serde(default = "default_i64")]
+    no_reprint: i64,
+    #[serde(default = "default_i64")]
+    autoplay: i64,
+    #[serde(default = "default_i64")]
+    ugc_pay: i64,
+    #[serde(default = "default_i64")]
+    is_cooperation: i64,
+    #[serde(default = "default_i64")]
+    ugc_pay_preview: i64,
+    #[serde(default = "default_i64")]
+    no_background: i64,
+    #[serde(default = "default_i64")]
+    clean_mode: i64,
+    #[serde(default = "default_i64")]
+    is_stein_gate: i64,
+    #[serde(default = "default_i64")]
+    is_360: i64,
+    #[serde(default = "default_i64")]
+    no_share: i64,
 }
 
 fn default_rights() -> Rights {
@@ -270,8 +270,8 @@ fn default_rights() -> Rights {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Owner {
-    #[serde(default = "default_i32", rename = "type")]
-    pub mid: i32,
+    #[serde(default = "default_i64", rename = "type")]
+    pub mid: i64,
     #[serde(default = "default_string")]
     pub name: String,
     #[serde(default = "default_string")]
@@ -288,28 +288,28 @@ fn default_owner() -> Owner {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Stat {
-    #[serde(default = "default_i32")]
-    pub aid: i32,
-    #[serde(default = "default_i32")]
-    pub view: i32,
-    #[serde(default = "default_i32")]
-    pub danmaku: i32,
-    #[serde(default = "default_i32")]
-    pub reply: i32,
-    #[serde(default = "default_i32")]
-    pub favorite: i32,
-    #[serde(default = "default_i32")]
-    pub coin: i32,
-    #[serde(default = "default_i32")]
-    pub share: i32,
-    #[serde(default = "default_i32")]
-    pub now_rank: i32,
-    #[serde(default = "default_i32")]
-    pub his_rank: i32,
-    #[serde(default = "default_i32")]
-    pub like: i32,
-    #[serde(default = "default_i32")]
-    pub dislike: i32,
+    #[serde(default = "default_i64")]
+    pub aid: i64,
+    #[serde(default = "default_i64")]
+    pub view: i64,
+    #[serde(default = "default_i64")]
+    pub danmaku: i64,
+    #[serde(default = "default_i64")]
+    pub reply: i64,
+    #[serde(default = "default_i64")]
+    pub favorite: i64,
+    #[serde(default = "default_i64")]
+    pub coin: i64,
+    #[serde(default = "default_i64")]
+    pub share: i64,
+    #[serde(default = "default_i64")]
+    pub now_rank: i64,
+    #[serde(default = "default_i64")]
+    pub his_rank: i64,
+    #[serde(default = "default_i64")]
+    pub like: i64,
+    #[serde(default = "default_i64")]
+    pub dislike: i64,
     #[serde(default = "default_string")]
     pub evaluation: String,
     #[serde(default = "default_string")]
@@ -336,12 +336,12 @@ fn default_stat() -> Stat {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Dimension {
-    #[serde(default = "default_i32")]
-    pub width: i32,
-    #[serde(default = "default_i32")]
-    pub height: i32,
-    #[serde(default = "default_i32")]
-    pub rotate: i32,
+    #[serde(default = "default_i64")]
+    pub width: i64,
+    #[serde(default = "default_i64")]
+    pub height: i64,
+    #[serde(default = "default_i64")]
+    pub rotate: i64,
 }
 
 fn default_dimension() -> Dimension {
@@ -356,14 +356,14 @@ fn default_dimension() -> Dimension {
 pub struct Page {
     #[serde(default = "default_i64")]
     pub cid: i64,
-    #[serde(default = "default_i32")]
-    pub page: i32,
+    #[serde(default = "default_i64")]
+    pub page: i64,
     #[serde(default = "default_string")]
     pub from: String,
     #[serde(default = "default_string")]
     pub part: String,
-    #[serde(default = "default_i32")]
-    pub duration: i32,
+    #[serde(default = "default_i64")]
+    pub duration: i64,
     #[serde(default = "default_string")]
     pub vid: String,
     #[serde(default = "default_string")]
@@ -386,16 +386,16 @@ pub struct VideoUrl {
     pub quality: i64,
     #[serde(default = "default_string")]
     pub format: String,
-    #[serde(default = "default_i32")]
-    pub timelength: i32,
+    #[serde(default = "default_i64")]
+    pub timelength: i64,
     #[serde(default = "default_string")]
     pub accept_format: String,
     #[serde(default = "default_vec", deserialize_with = "null_vec")]
     pub accept_description: Vec<String>,
     #[serde(default = "default_vec", deserialize_with = "null_vec")]
-    pub accept_quality: Vec<i32>,
-    #[serde(default = "default_i32")]
-    pub video_codecid: i32,
+    pub accept_quality: Vec<i64>,
+    #[serde(default = "default_i64")]
+    pub video_codecid: i64,
     #[serde(default = "default_string")]
     pub seek_param: String,
     #[serde(default = "default_string")]
@@ -414,8 +414,8 @@ fn default_dash() -> Dash {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Durl {
-    #[serde(default = "default_i32")]
-    pub order: i32,
+    #[serde(default = "default_i64")]
+    pub order: i64,
 
     #[serde(default = "default_i64")]
     pub length: i64,
@@ -905,26 +905,22 @@ pub struct LoginTvQrInfo {
     // -400：请求错误
     // 86038：二维码已失效
     // 86039：二维码尚未确认
-    #[serde(default = "default_i32")]
-    pub error_data: i32,
-    #[serde(default = "default_i32")]
-    pub mid: i32,
+    #[serde(default = "default_i64")]
+    pub error_data: i64,
+    #[serde(default = "default_i64")]
+    pub mid: i64,
     #[serde(default = "default_string")]
     pub access_token: String,
     #[serde(default = "default_string")]
     pub refresh_token: String,
-    #[serde(default = "default_i32")]
-    pub expires_in: i32,
+    #[serde(default = "default_i64")]
+    pub expires_in: i64,
 }
 
 /////////
 
 fn default_string() -> String {
     String::default()
-}
-
-fn default_i32() -> i32 {
-    0
 }
 
 fn default_i64() -> i64 {
@@ -1170,4 +1166,29 @@ pub struct SeriesVideoMeta {
     pub series_id: i64,
     pub state: i64,
     pub total: i64,
+}
+
+////////////////////
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SeriesVideoInfoData {
+    pub meta: SeriesVideoInfoMeta,
+    pub recent_aids: Vec<i64>,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SeriesVideoInfoMeta {
+    pub series_id: i64,
+    pub mid: i64,
+    pub name: String,
+    pub description: String,
+    pub keywords: Vec<String>,
+    pub creator: String,
+    pub state: i64,
+    pub last_update_ts: i64,
+    pub total: i64,
+    pub ctime: i64,
+    pub mtime: i64,
+    pub raw_keywords: String,
+    pub category: i64,
 }
