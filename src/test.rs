@@ -186,3 +186,16 @@ async fn test_collection_video_page() {
         }
     };
 }
+
+#[tokio::test]
+async fn test_seasons_series_list() {
+    let client = Client::new();
+    match client.seasons_series_list(8076065, 1, 18).await {
+        Ok(info) => {
+            println!("{}", serde_json::to_string(&info).unwrap())
+        }
+        Err(err) => {
+            println!("{}", err)
+        }
+    };
+}

@@ -4,12 +4,17 @@ RUST哔哩哔哩客户端
 
 ## 实现功能
 
-- [x] 用户
+- [x] 个人中心
     - [x] 使用WEB方式扫码获取SessionData
     - [x] 获取个人信息
 - [x] 视频
     - [x] 通过BVID/AVID获取视频信息
     - [x] 获取视频的下载地址
+- [x] 用户
+  - [x] 获取用户信息
+  - [x] 获取用户的合集和系列
+  - [ ] 获取系列内的视频
+  - [x] 获取合集内的视频
 - [x] 客户端接口支持
     - [x] 使用TV方式扫码获取SessionData/refresh_token
 
@@ -47,3 +52,8 @@ async fn main() {
     client.tv_login_qr_info("code".to_string()).await;
 }
 ```
+
+## PS：一些关键词的说明
+
+- （用户的）合集 ： 在接口种有时候被称作 Seasons （比如合集和系列的列表） , 有时候被称作 Collection （查询合集内的视频）。本库内的struct与fn的名称保持和官方接口一致。
+- （用户的）系列 Series

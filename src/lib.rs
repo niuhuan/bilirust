@@ -318,6 +318,44 @@ impl Client {
             .await?)
     }
 
+    // https://space.bilibili.com/{mid}/channel/series
+    // page_num 1 开始
+    // page_size 请使用30
+    pub async fn seasons_series_list_data(
+        &self,
+        mid: i32,
+        page_num: i64,
+        page_size: i64,
+    ) -> Result<SeasonsSeriesListData> {
+        Ok(self
+            .request_api(
+                reqwest::Method::GET,
+                "/x/polymer/space/seasons_series_list",
+                Some(serde_json::json!({
+                    "mid": mid,
+                    "page_num":page_num,
+                    "page_size":page_size,
+                })),
+                None,
+            )
+            .await?)
+    }
+
+    // https://space.bilibili.com/{mid}/channel/series
+    // page_num 1 开始
+    // page_size 请使用30
+    pub async fn seasons_series_list(
+        &self,
+        mid: i32,
+        page_num: i64,
+        page_size: i64,
+    ) -> Result<SeasonsSeriesList> {
+        Ok(self
+            .seasons_series_list_data(mid, page_num, page_size)
+            .await?
+            .items_lists)
+    }
+
     // https://space.bilibili.com/{mid}/channel/collectiondetail?sid={sid}
     // page_num 1 开始
     // page_size 请使用30

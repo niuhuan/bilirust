@@ -1082,13 +1082,13 @@ pub struct ProfessionUserInfo {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CollectionDetailPage {
     pub aids: Vec<i64>,
-    pub archives: Vec<CollectionDetailArchive>,
+    pub archives: Vec<VideoArchive>,
     pub meta: CollectionDetailMeta,
-    pub page: VideoPageInfo,
+    pub page: PageInfo,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct CollectionDetailArchive {
+pub struct VideoArchive {
     pub aid: i64,
     pub bvid: String,
     pub ctime: i64,
@@ -1096,14 +1096,14 @@ pub struct CollectionDetailArchive {
     pub interactive_video: bool,
     pub pic: String,
     pub pubdate: i64,
-    pub stat: CollectionDetailStat,
+    pub stat: VideoStat,
     pub state: i64,
     pub title: String,
     pub ugc_pay: i64,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct CollectionDetailStat {
+pub struct VideoStat {
     pub view: i64,
 }
 
@@ -1120,8 +1120,54 @@ pub struct CollectionDetailMeta {
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct VideoPageInfo {
+pub struct PageInfo {
     pub page_num: i64,
     pub page_size: i64,
+    pub total: i64,
+}
+
+///////////////////////
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SeasonsSeriesListData {
+    pub items_lists: SeasonsSeriesList,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SeasonsSeriesList {
+    pub page: PageInfo,
+    pub seasons_list: Vec<SeasonsList>,
+    pub series_list: Vec<SeriesList>,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SeasonsList {
+    pub archives: Vec<VideoArchive>,
+    pub meta: CollectionDetailMeta,
+    pub recent_aids: Vec<i64>,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SeriesList {
+    pub archives: Vec<VideoArchive>,
+    pub meta: SeriesVideoMeta,
+    pub recent_aids: Vec<i64>,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SeriesVideoMeta {
+    pub category: i64,
+    pub cover: String,
+    pub creator: String,
+    pub ctime: i64,
+    pub description: String,
+    pub keywords: Vec<String>,
+    pub last_update_ts: i64,
+    pub mid: i64,
+    pub mtime: i64,
+    pub name: String,
+    pub raw_keywords: String,
+    pub series_id: i64,
+    pub state: i64,
     pub total: i64,
 }
