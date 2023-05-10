@@ -412,8 +412,6 @@ impl Client {
                 "/x/v3/fav/resource/ids",
                 Some(serde_json::json!({
                 "media_id":media_id,
-                "platform":"web",
-                 "jsonp":"jsonp",
                 })),
                 None,
             )
