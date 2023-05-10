@@ -404,19 +404,16 @@ impl Client {
 
      pub async fn favlist_video(
         &self,
-        mid: i64,
         media_id: i64,
-        page_num: i64,
-        page_size: i64,) -> Result<Favlist> {
+        ) -> Result<Favlist> {
         Ok(self
             .request_api(
                 reqwest::Method::GET,
-                "/x/v3/fav/resource/list",
+                "/x/v3/fav/resource/ids",
                 Some(serde_json::json!({
-                "mid": mid,
                 "media_id":media_id,
-                "page_size":page_size,
-                "page_num":page_num,
+                "platform":"web",
+                 "jsonp":"jsonp",
                 })),
                 None,
             )
