@@ -356,6 +356,11 @@ impl Client {
             .items_lists)
     }
 
+
+
+
+
+
     // https://space.bilibili.com/{mid}/channel/collectiondetail?sid={sid}
     // page_num 1 开始
     // page_size 请使用30
@@ -395,6 +400,29 @@ impl Client {
             )
             .await?)
     }
+
+
+     pub async fn favlist_video(
+        &self,
+        mid: i64,
+        media_id: i64,
+        page_num: i64,
+        page_size: i64,) -> Result<Favlist> {
+        Ok(self
+            .request_api(
+                reqwest::Method::GET,
+                "/x/v3/fav/resource/list",
+                Some(serde_json::json!({
+                "mid": mid,
+                "media_id":media_id,
+                "page_size":page_size,
+                "page_num":page_num,
+                })),
+                None,
+            )
+            .await?)
+    }
+
 }
 
 #[cfg(test)]

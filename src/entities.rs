@@ -1151,6 +1151,14 @@ pub struct SeriesList {
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Favlist {
+    pub mid: i64,
+    pub fid: i64,
+    pub page_num: i64,
+    pub page_size: i64,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SeriesVideoMeta {
     pub category: i64,
     pub cover: String,
