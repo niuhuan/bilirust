@@ -1152,7 +1152,7 @@ pub struct SeriesList {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Favlist {
-    pub  media_id: i64,
+    pub  bvid: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
