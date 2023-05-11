@@ -1152,7 +1152,13 @@ pub struct SeriesList {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Favlist {
-    pub  bvid: String,
+    pub data: Vec<FavVideoInfo>,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct FavVideoInfo{
+    pub id: String,
+    pub bvid: i64,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
