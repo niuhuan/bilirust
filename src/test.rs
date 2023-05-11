@@ -199,3 +199,17 @@ async fn test_seasons_series_list() {
         }
     };
 }
+
+#[tokio::test]
+async fn test_favlist_video_page() {
+    let client = Client::new();
+    match client.favlist_video(1221339513).await {
+        Ok(info) => {
+            println!("{}", serde_json::to_string(&info).unwrap())
+        }
+        Err(err) => {
+            println!("{}", err)
+        }
+    };
+}
+
