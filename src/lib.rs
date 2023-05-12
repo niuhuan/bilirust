@@ -395,6 +395,40 @@ impl Client {
             )
             .await?)
     }
+
+    // https://space.bilibili.com/{mid}/favlist?fid={fid}
+    // page_num 1 开始
+    // page_size 请使用20
+    pub async fn fav_list_page(
+        &self,
+        fid: i64,
+        page_num: i64,
+        page_size: i64,
+        keyword: Option<String>,
+        order: FavListOrder,
+    ) -> Result<FavListPage> {
+        Ok(self
+            .request_api(
+                reqwest::Method::GET,
+                "/x/v3/fav/resource/list",
+                Some(serde_json::json!({
+                    "media_id": fid,
+                    "pn":page_num,
+                    "ps":page_size,
+                    "keyword": if let Some(keyword) = keyword {
+                        keyword
+                    } else {
+                        "".to_string()
+                    },
+                    "order": order, // mtime (最新收藏), view (最多播放)， pubtime (发布时间)，
+                    "type":0,
+                    "pn":0,
+                    "platform":"web",
+                })),
+                None,
+            )
+            .await?)
+    }
 }
 
 #[cfg(test)]
