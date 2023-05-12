@@ -422,7 +422,6 @@ impl Client {
                     },
                     "order": order, // mtime (最新收藏), view (最多播放)， pubtime (发布时间)，
                     "type":0,
-                    "pn":0,
                     "platform":"web",
                 })),
                 None,
