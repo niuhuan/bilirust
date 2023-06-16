@@ -337,7 +337,7 @@ impl Client {
             .ok_or(anyhow!("query not state"))?
             .get("data")
             .ok_or(anyhow!("state not data"))?;
-        Ok(serde_path_to_error::deserialize(season_json.clone())?)
+        Ok(from_value(season_json.clone())?)
     }
 
     pub async fn user_info(&self, mid: i64) -> Result<UserInfo> {

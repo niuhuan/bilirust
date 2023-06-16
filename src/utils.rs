@@ -11,6 +11,10 @@ pub fn from_str<T: for<'de> serde::Deserialize<'de>>(json: &str) -> Result<T> {
     )?)
 }
 
+pub fn from_value<T: for<'de> serde::Deserialize<'de>>(json: serde_json::Value) -> Result<T> {
+    Ok(serde_path_to_error::deserialize(json)?)
+}
+
 //////////////////// AV->BV ////////////////////
 
 const AV_TABLE: &'static str = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF";
