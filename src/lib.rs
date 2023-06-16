@@ -1,7 +1,9 @@
 use std::str::FromStr;
 
+use anyhow::anyhow;
 pub use anyhow::{Error, Result};
 use chrono::Timelike;
+
 pub use entities::*;
 pub use utils::*;
 
@@ -275,12 +277,12 @@ impl Client {
 
     /// 获取视频信息
     /// id: 例如 ep1234 ss1234
-    pub async fn videos_info(&self, id: String) -> Result<SsState> {
+    pub async fn videos_info(&self, id: String) -> Result<web::SsState> {
         self.videos_info_by_url(format!("https://www.bilibili.com/bangumi/play/{}", id))
             .await
     }
 
-    pub async fn videos_info_by_url(&self, url: String) -> Result<SsState> {
+    pub async fn videos_info_by_url(&self, url: String) -> Result<web::SsState> {
         let rsp = self
             .agent
             .get(url)
@@ -289,17 +291,53 @@ impl Client {
             .error_for_status()?
             .text()
             .await?;
-        let rsp: &str = match rsp.find("window.__INITIAL_STATE__=") {
+        let start = r#"<script id="__NEXT_DATA__" type="application/json">"#;
+        let stop = r#"</script>"#;
+        let rsp: &str = match rsp.find(start) {
             None => return Err(Error::msg("not found (1)")),
             Some(index) => {
-                let rsp = &rsp[(index + "window.__INITIAL_STATE__=".len())..];
-                match rsp.find(";(function()") {
+                let rsp = &rsp[(index + start.len())..];
+                match rsp.find(stop) {
                     None => return Err(Error::msg("not found (2)")),
                     Some(index) => &rsp[..index],
                 }
             }
         };
-        Ok(from_str(rsp)?)
+        let json: serde_json::Value = serde_json::from_str(rsp)?;
+        let season_json = json
+            .get("props")
+            .ok_or(anyhow!("not found props"))?
+            .get("pageProps")
+            .ok_or(anyhow!("not found pageProps"))?
+            .get("dehydratedState")
+            .ok_or(anyhow!("not found dehydratedState"))?
+            .get("queries")
+            .ok_or(anyhow!("not found queries"))?
+            .as_array()
+            .ok_or(anyhow!("queries not array"))?
+            .iter()
+            .filter(|x| {
+                if let Some(query_key) = x.get("queryKey") {
+                    if let Some(query_key) = query_key.as_array() {
+                        for x in query_key {
+                            if let Some(x) = x.as_str() {
+                                if x == "pgc/view/web/season" {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            })
+            .nth(0)
+            .ok_or(anyhow!("not found pgc/view/web/season"))?;
+        let season_json = season_json
+            .get("state")
+            .ok_or(anyhow!("query not state"))?
+            .get("data")
+            .ok_or(anyhow!("state not data"))?;
+        Ok(serde_path_to_error::deserialize(season_json.clone())?)
     }
 
     pub async fn user_info(&self, mid: i64) -> Result<UserInfo> {

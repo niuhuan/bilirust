@@ -152,6 +152,19 @@ async fn test_videos_info() {
 }
 
 #[tokio::test]
+async fn test_videos_info_ep() {
+    let client = Client::new();
+    match client.videos_info("ep307247".to_string()).await {
+        Ok(info) => {
+            println!("{}", serde_json::to_string(&info).unwrap())
+        }
+        Err(err) => {
+            println!("{}", err)
+        }
+    };
+}
+
+#[tokio::test]
 async fn test_user_info() {
     let client = Client::new();
     match client.user_info(504934876).await {
