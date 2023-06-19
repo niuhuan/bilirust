@@ -3,6 +3,7 @@ use std::str::FromStr;
 use anyhow::anyhow;
 pub use anyhow::{Error, Result};
 use chrono::Timelike;
+use tracing::debug;
 
 pub use entities::*;
 pub use utils::*;
@@ -36,6 +37,14 @@ impl Client {
         }
     }
 
+    /// 对请求增加身份认证Cookie
+    fn sess(&self, request: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
+        match &self.sess_data {
+            Some(web_token) => request.header("Cookie", format!("SESSDATA={}", web_token,)),
+            None => request,
+        }
+    }
+
     /// 请求并获得结果
     pub async fn request_api<T: for<'de> serde::Deserialize<'de>>(
         &self,
@@ -44,13 +53,10 @@ impl Client {
         query: Option<serde_json::Value>,
         body: Option<serde_json::Value>,
     ) -> Result<T> {
-        let request = self
-            .agent
-            .request(method, format!("{}{}", API_HOST_URL, path).as_str());
-        let request = match &self.sess_data {
-            Some(web_token) => request.header("Cookie", format!("SESSDATA={}", web_token,)),
-            None => request,
-        };
+        let url = format!("{}{}", API_HOST_URL, path);
+        debug!(target = "network", "Request : {}", url);
+        let request = self.agent.request(method, url.as_str());
+        let request = self.sess(request);
         let request = match query {
             None => request,
             Some(query) => request.query(&query),
@@ -61,10 +67,11 @@ impl Client {
         };
         let resp = resp.await?;
         let body = resp.text().await?;
+        debug!(target = "network", "Response : {}", body);
         let response: Response<T> = from_str(&body)?;
         match &(response.code) {
-            0 => Ok(response.data.ok_or(Error::msg("response empty"))?),
-            _ => Err(anyhow::Error::msg(response.message)),
+            0 => Ok(response.data.ok_or(Error::msg("返回内容为空"))?),
+            _ => Err(Error::msg(response.message)),
         }
     }
 
@@ -77,9 +84,9 @@ impl Client {
         query: Option<serde_json::Value>,
         body: Option<serde_json::Value>,
     ) -> Result<serde_json::Value> {
-        let request = self
-            .agent
-            .request(method, format!("{}{}", PASSPORT_HOST_URL, path).as_str());
+        let url = format!("{}{}", PASSPORT_HOST_URL, path);
+        debug!(target = "network", "Request : {}", url);
+        let request = self.agent.request(method, url.as_str());
         let request = match query {
             None => request,
             Some(query) => request.query(&query),
@@ -90,6 +97,7 @@ impl Client {
         };
         let resp = resp.await?;
         let body = resp.text().await?;
+        debug!(target = "network", "Response : {}", body);
         let json: serde_json::Value = from_str(body.as_str())?;
         Ok(json)
     }
@@ -101,15 +109,22 @@ impl Client {
         let json = self
             .request_passport(reqwest::Method::GET, "/qrcode/getLoginUrl", None, None)
             .await?;
-        let code = &json["code"];
+        let code = json
+            .get("code")
+            .ok_or(Error::msg("返回内容格式错误: 服务器的响应中不包含code"))?;
         if !code.is_i64() {
-            return Err(Error::msg("err code format"));
+            return Err(Error::msg("返回内容格式错误: code应为数字类型"));
         }
         if code.as_i64().unwrap() != 0 {
-            return Err(Error::msg("error"));
+            return Err(Error::msg(format!(
+                "未能获取到二维码，服务器返回的code为: {}",
+                code.as_i64().unwrap()
+            )));
         }
-        let data = json["data"].clone();
-        Ok(serde_json::from_value(data)?)
+        let data = json
+            .get("data")
+            .ok_or(Error::msg("返回内容格式错误: 服务器的响应中不包含data"))?;
+        Ok(serde_json::from_value(data.clone())?)
     }
 
     /// WEB二维码登录 - 获取Web二维码登录信息
@@ -283,9 +298,9 @@ impl Client {
     }
 
     pub async fn videos_info_by_url(&self, url: String) -> Result<web::SsState> {
+        let req = self.agent.get(url);
         let rsp = self
-            .agent
-            .get(url)
+            .sess(req)
             .send()
             .await?
             .error_for_status()?
@@ -294,11 +309,11 @@ impl Client {
         let start = r#"<script id="__NEXT_DATA__" type="application/json">"#;
         let stop = r#"</script>"#;
         let rsp: &str = match rsp.find(start) {
-            None => return Err(Error::msg("not found (1)")),
+            None => return Err(Error::msg("not found videos info data (1)")),
             Some(index) => {
                 let rsp = &rsp[(index + start.len())..];
                 match rsp.find(stop) {
-                    None => return Err(Error::msg("not found (2)")),
+                    None => return Err(Error::msg("not found videos info data (2)")),
                     Some(index) => &rsp[..index],
                 }
             }
@@ -306,15 +321,15 @@ impl Client {
         let json: serde_json::Value = serde_json::from_str(rsp)?;
         let season_json = json
             .get("props")
-            .ok_or(anyhow!("not found props"))?
+            .ok_or(anyhow!("not found videos info data (props)"))?
             .get("pageProps")
-            .ok_or(anyhow!("not found pageProps"))?
+            .ok_or(anyhow!("not found videos info data (pageProps)"))?
             .get("dehydratedState")
-            .ok_or(anyhow!("not found dehydratedState"))?
+            .ok_or(anyhow!("not found videos info data (dehydratedState)"))?
             .get("queries")
-            .ok_or(anyhow!("not found queries"))?
+            .ok_or(anyhow!("not found videos info data (queries)"))?
             .as_array()
-            .ok_or(anyhow!("queries not array"))?
+            .ok_or(anyhow!("videos info data error (queries is non-array)"))?
             .iter()
             .filter(|x| {
                 if let Some(query_key) = x.get("queryKey") {
@@ -331,12 +346,12 @@ impl Client {
                 return false;
             })
             .nth(0)
-            .ok_or(anyhow!("not found pgc/view/web/season"))?;
+            .ok_or(anyhow!("not found videos info data (pgc/view/web/season)"))?;
         let season_json = season_json
             .get("state")
-            .ok_or(anyhow!("query not state"))?
+            .ok_or(anyhow!("not found videos info data (state)"))?
             .get("data")
-            .ok_or(anyhow!("state not data"))?;
+            .ok_or(anyhow!("not found videos info data (data)"))?;
         Ok(from_value(season_json.clone())?)
     }
 
