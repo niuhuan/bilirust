@@ -102,6 +102,21 @@ impl Client {
         Ok(json)
     }
 
+    /// 请求web页面
+    pub async fn request_web(&self, url: String) -> Result<String> {
+        debug!(target = "network", "Request : {}", url);
+        let req = self.agent.get(url);
+        let rsp = self
+            .sess(req)
+            .send()
+            .await?
+            .error_for_status()?
+            .text()
+            .await?;
+        debug!(target = "network", "Response : {}", rsp);
+        Ok(rsp)
+    }
+
     /// WEB二维码登录 - 申请二维码
     /// 此返回结构略有不同, 所以进行了自定义封装
     /// code为0成功
@@ -117,7 +132,7 @@ impl Client {
         }
         if code.as_i64().unwrap() != 0 {
             return Err(Error::msg(format!(
-                "未能获取到二维码，服务器返回的code为: {}",
+                "未能获取到二维码(1)，服务器返回的code为: {}",
                 code.as_i64().unwrap()
             )));
         }
@@ -137,10 +152,15 @@ impl Client {
                 Option::Some(serde_json::json!({ "oauthKey": oauth_key })),
             )
             .await?;
-        let value = json["data"].clone();
+        let value = json
+            .get("data")
+            .ok_or(Error::msg("返回内容格式错误: 服务器的响应中不包含data"))?;
         if value.is_i64() {
             Ok(LoginQrInfo {
-                error_data: value.as_i64().ok_or(Error::msg("error format"))?,
+                error_data: value.as_i64().ok_or(Error::msg(format!(
+                    "未能获取到二维码(2)，服务器返回的code为: {}",
+                    value.as_i64().unwrap()
+                )))?,
                 url: String::default(),
             })
         } else {
@@ -297,15 +317,10 @@ impl Client {
             .await
     }
 
+    /// 获取视频的信息
+    /// 例如 ep1234 ss1234 的 url
     pub async fn videos_info_by_url(&self, url: String) -> Result<web::SsState> {
-        let req = self.agent.get(url);
-        let rsp = self
-            .sess(req)
-            .send()
-            .await?
-            .error_for_status()?
-            .text()
-            .await?;
+        let rsp = self.request_web(url).await?;
         let start = r#"<script id="__NEXT_DATA__" type="application/json">"#;
         let stop = r#"</script>"#;
         let rsp: &str = match rsp.find(start) {
@@ -355,6 +370,7 @@ impl Client {
         Ok(from_value(season_json.clone())?)
     }
 
+    /// 获取当前登录用户信息
     pub async fn user_info(&self, mid: i64) -> Result<UserInfo> {
         Ok(self
             .request_api(
@@ -436,6 +452,7 @@ impl Client {
             .await?)
     }
 
+    /// 获取系列的信息
     pub async fn series_info(&self, series_id: i64) -> Result<SeriesVideoInfoData> {
         Ok(self
             .request_api(
